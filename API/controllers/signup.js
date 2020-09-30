@@ -1,16 +1,17 @@
 const db = require('../database/db')
 
 
-function putingoodformat(param, goodOne) {
+function putingoodformat(param) {
     let ret = `'${param}'`;
     return (ret);
 }
 
-function correct(param) {
-    FirstName = putingoodformat(String(param.body[0].FirstName), FirstName);
-    LastName = putingoodformat(String(param.body[0].LastName), LastName);
-    Email = putingoodformat(String(param.body[0].Email), Email);
-    passwd = putingoodformat(String(param.body[0].Passwd), passwd);
+function correct(req) {
+    // console.log
+    req.body[0].FirstName = putingoodformat(String(req.body[0].FirstName));
+    req.body[0].LastName = putingoodformat(String(req.body[0].LastName));
+    req.body[0].Email = putingoodformat(String(req.body[0].Email));
+    req.body[0].passwd = putingoodformat(String(req.body[0].Passwd));
 }
 
 function checkArgument(LastName, FirstName, Email, passwd) {
@@ -23,11 +24,12 @@ function checkArgument(LastName, FirstName, Email, passwd) {
 
 
 const addUser = (req, res, next) => {
+    console.log("ok req");
     console.log(req.body[0].LastName);
     correct(req);
     const query = `INSERT INTO user_info (LastName, FirtsName, Email, passwd) VALUES
-        (${LastName}, ${FirstName}, ${Email}, ${passwd})`;
-    if (checkArgument(FirstName, LastName, Email, passwd) === false) {
+        (${req.body[0].LastName}, ${req.body[0].FirstName}, ${req.body[0].Email}, ${req.body[0].passwd})`;
+    if (checkArgument(req.body[0].FirstName, req.body[0].LastName, req.body[0].Email, req.body[0].passwd) === false) {
         res.send('one of your string were empty');
         return;
     }
